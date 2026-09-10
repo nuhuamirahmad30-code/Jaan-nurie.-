@@ -22,7 +22,6 @@ jobs:
             unzip -o Jaan_Nurie_New_Game.zip
           fi
           
-          # If files extracted into a subfolder, move them to root
           if [ -d "Jaan_Nurie_New_Game" ]; then
             echo "Moving files from subfolder..."
             cp -r Jaan_Nurie_New_Game/* .
@@ -45,10 +44,11 @@ jobs:
           chmod +x gradlew
 
       - name: Build Debug APK
-        run: ./gradlew clean assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/*.apk
