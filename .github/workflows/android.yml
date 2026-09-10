@@ -20,8 +20,10 @@ jobs:
           if [ -f "Jaan_Nurie_New_Game.zip" ]; then
             echo "Unzipping Jaan_Nurie_New_Game.zip..."
             unzip -o Jaan_Nurie_New_Game.zip
-          else
-            echo "No zip file found, proceeding with current directory structure."
+          fi
+          # Move files out if they were extracted inside a subfolder
+          if [ -d "Jaan_Nurie_New_Game" ]; then
+            cp -r Jaan_Nurie_New_Game/* .
           fi
 
       - name: Set up JDK 17
@@ -33,8 +35,13 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Grant Execute Permission for Gradle Wrapper
-        run: chmod +x gradlew
+      - name: Ensure Gradle Wrapper Exists
+        run: |
+          if [ ! -f "gradlew" ]; then
+            echo "gradlew not found, generating wrapper..."
+            gradle wrapper
+          fi
+          chmod +x gradlew
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
