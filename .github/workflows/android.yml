@@ -43,6 +43,13 @@ jobs:
           gradle wrapper --gradle-version 8.9
           chmod +x gradlew
 
+      - name: Fix Kotlin Dependency Resolution
+        run: |
+          # Inject strategy into root build.gradle to resolve stdlib conflicts
+          if [ -f "build.gradle" ]; then
+            echo "subprojects { configurations.all { resolutionStrategy.eachDependency { DependencyResolveDetails details -> if (details.requested.group == 'org.jetbrains.kotlin') { details.useVersion '1.9.22' } } } }" >> build.gradle
+          fi
+
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon
 
