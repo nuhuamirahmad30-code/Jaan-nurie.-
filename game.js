@@ -1,6 +1,33 @@
-const H=['home','world','story'];let x=50,y=28,t;
-function show(id){H.forEach(v=>document.getElementById(v).style.display=v==id?'block':'none')}
-function start(){show('world')}function story(){show('story')}function back(){show('home')}
-function move(dx,dy){x=Math.max(5,Math.min(90,x+dx));y=Math.max(15,Math.min(60,y+dy));let a=document.getElementById('avatar');a.style.left=x+'%';a.style.bottom=y+'%'}
-function hold(dx,dy){move(dx,dy);clearInterval(t);t=setInterval(()=>move(dx,dy),80)}
-document.addEventListener('pointerup',()=>clearInterval(t));document.addEventListener('keydown',e=>{if(e.key=='ArrowLeft')move(-1,0);if(e.key=='ArrowRight')move(1,0);if(e.key=='ArrowUp')move(0,1);if(e.key=='ArrowDown')move(0,-1)})
+// Wait for DOM to load fully
+document.addEventListener("DOMContentLoaded", function() {
+
+    // Helper function to safely bind click & touch events
+    function bindCardClick(elementId, actionCallback) {
+        const card = document.getElementById(elementId);
+        if (card) {
+            // Support both touch for mobile and click for WebView
+            card.addEventListener("click", actionCallback);
+            card.addEventListener("touchstart", function(e) {
+                e.preventDefault(); // prevents double-firing on tap
+                actionCallback();
+            }, { passive: false });
+        }
+    }
+
+    // Bind event listeners to your location cards
+    bindCardClick("our-duplex", function() {
+        console.log("OUR DUPLEX tapped");
+        // Open Duplex scene / show dialog logic
+    });
+
+    bindCardClick("date-night", function() {
+        console.log("DATE NIGHT tapped");
+        // Open Date Night scene / show dialog logic
+    });
+
+    bindCardClick("el19-construction", function() {
+        console.log("EL.19 CONSTRUCTION tapped");
+        // Open Construction scene / show dialog logic
+    });
+
+});
